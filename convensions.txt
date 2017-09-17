@@ -1,0 +1,16 @@
+convensions.txt
+
+Class names - CamelCase
+
+Class methods = lowerCamelCase
+
+Class variables = lowerCamelCase
+
+functions = underscore_to_seperate_words
+
+No global variables.
+
+Functions should be pure. That means they should be deterministic and not keep
+state. Random numbers are obviously an exception.
+
+Objects in the geometry.py file and the source.py file are not to keep any state beyond init.

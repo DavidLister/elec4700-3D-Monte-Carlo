@@ -1,9 +1,12 @@
+# source.py
+#
+# Started September 2017
+#
 
 from photon import Photon
 import numpy as np
 
 class Source:
-
 
     def __init__(self, position, radius, normal):
         """Please make sure the normal vector is normalized :)"""
@@ -24,4 +27,3 @@ class Source:
         initalPosition = self.position + radiusVector
 
         return Photon(initalPosition, self.normal, startTime)
-

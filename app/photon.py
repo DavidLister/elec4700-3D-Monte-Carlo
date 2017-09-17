@@ -1,5 +1,7 @@
 # photon.py
 #
+# Started September 2017
+#
 # Basically just a data class for the photon, pretty anti-climactic
 
 import numpy as np

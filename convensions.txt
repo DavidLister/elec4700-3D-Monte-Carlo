@@ -8,9 +8,13 @@ Class variables = lowerCamelCase
 
 functions = underscore_to_seperate_words
 
-No global variables.
+Symbolic constants (ANY 'magic number') = ALL_CAPS_UNDERSCORE
 
 Functions should be pure. That means they should be deterministic and not keep
 state. Random numbers are obviously an exception.
 
 Objects in the geometry.py file and the source.py file are not to keep any state beyond init.
+
+Units:
+    - Length in mm
+    - Time in ns

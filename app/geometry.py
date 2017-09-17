@@ -4,6 +4,7 @@
 #
 
 import numpy as np
+import visualization
 
 # Note, for multithreading to work, these classes must not change their state after init.
 
@@ -25,6 +26,9 @@ class Point:
     def getZ(self):
         return self.array[2]
 
+    def __str__(self):
+        return str("{}, {}, {}").format(self.array[0], self.array[1], self.array[2])
+
 
 class Vector:
 
@@ -43,10 +47,11 @@ class Ray:
 
 class Object:
 
-    def __init__(self, priority, properties, logging=False):
+    def __init__(self, priority, properties, visible = False, logging=False):
         self.priority = priority
         self.logging = logging
         self.properties = properties
+        self.visible = visible
 
     def contains(self, point):
         pass
@@ -63,10 +68,13 @@ class Object:
         """Returns the intersection point and normal (if it exists)"""
         pass
 
-def Box(Object):
+    def getModel(self):
+        pass
 
-    def __init__(self, corner1, corner2, priority, properties, logging = False):
-        super(Box, self).__init__(priority, properties, logging)
+class Box(Object):
+
+    def __init__(self, corner1, corner2, priority, properties, visible=True, logging = False):
+        super(Box, self).__init__(priority, properties, visible, logging)
         self.cornerA = corner1
         self.cornerB = corner2
         self.xrange = [self.cornerA.getX(), self.cornerB.getX()]
@@ -76,24 +84,28 @@ def Box(Object):
         self.zrange = [self.cornerA.getZ(), self.cornerB.getZ()]
         self.zrange.sort()
 
-    def contains(point):
+    def contains(self, point):
         """Returns True/False if the point is inside the object"""
         if not in_range(point.getX(), self.xrange):
             return False
         elif not in_range(point.getY(), self.yrange):
             return False
-        elif not in in_range(point.getZ(), self.zrange):
+        elif not in_range(point.getZ(), self.zrange):
             return False
         else:
             return True
 
+    def getModel(self):
+        return visualization.Box(self.cornerA, self.cornerB)
 
 
 class OpticalProperties:
 
-    def __init__(self, n, mean_free_path):
+    def __init__(self, n, mean_free_path, absorbance, reflectance, counter=False):
         self.n = n
         self.meanFreePath = mean_free_path # mm
 
-AIR = OpticalProperties(1.00029, 10 * 10 ** 6)
-FOG_SIMPLE = OpticalProperties(1.00029, 50)
+AIR = OpticalProperties(1.00029, 10 * 10 ** 6, 0, 0)
+FOG_SIMPLE = OpticalProperties(1.00029, 50, 0, 0)
+REFLECTOR = OpticalProperties(1, 1, 0, 1)
+RECEIVER = OpticalProperties(1, 1, 1, 0, counter=True)

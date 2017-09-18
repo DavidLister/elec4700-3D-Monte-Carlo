@@ -14,11 +14,11 @@ class Source:
         self.radius = radius
         self.normal = normal
 
-    def drawRandomPhoton(self):
+    def getPhoton(self):
         """"Draws a random photon from the start of the beam"""
 
         # Pull the start time from a normal test pdf
-        startTime = np.random.normal(5, 1, 1)[0]
+        startTime = np.random.normal(1, 0.1, 1)[0]
 
         # TODO In the future find a vector perpendicular to the beam
         # normal and then rotate it randomly and scale it randomly
@@ -27,3 +27,6 @@ class Source:
         initalPosition = self.position + radiusVector
 
         return Photon(initalPosition, self.normal, startTime)
+
+    def getID(self):
+        return str(self.position)

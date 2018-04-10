@@ -17,13 +17,13 @@ scene.append(geometry.Box(geometry.Point(-1000, -1000, -1500), geometry.Point(10
 scene.append(geometry.Box(geometry.Point(-1000, -1000, 1500), geometry.Point(1000, 1000, 1600), 0, geometry.RECEIVER, logging=True))
 
 sources = []
-sources.append(source.Source(np.array([0, 0, 0]), np.array([1]), np.array([0, 0, 1])))
+sources.append(source.Source(np.array([0, 0, 1450]), np.array([1]), np.array([0, 1, -1])))
 
 if __name__ == '__main__':
     print("Main")
-    iterations = 10000
-    threads = 8
-    timeout = 30
+    iterations = 1000
+    threads = 6
+    timeout = 40
     tracker = simulation.Tracker(scene, sources, iterations)
     pool = [threading.Thread(target=simulation.operator, args=(tracker, scene, timeout,)) for i in range(threads)]
     start = time.time()
@@ -40,3 +40,4 @@ if __name__ == '__main__':
     plt.show()
 
     print("Done!")
+

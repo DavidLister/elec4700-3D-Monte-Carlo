@@ -30,8 +30,8 @@ class Counter:
             times = []
             for event in self.events:
                 times.append(event.time)
-            print(len(times))
-            plt.hist(times, 200, normed=1, alpha=0.75)
+            print(self.id, len(times))
+            plt.hist(times, 500, normed=1, alpha=0.75)
 
 
 class Tracker:
@@ -110,16 +110,25 @@ def change_medium(ray, scene, photon):
             dist.append(np.linalg.norm(pt - photon.position))
     target = object[dist.index(min(dist))]
     point = point[dist.index(min(dist))]
-    move(photon, point, 1)
+    path = point - photon.position
+    dist = np.linalg.norm(path)
+    uvect = path/dist
+    print(target, path, point, dist, uvect)
 
     if random.random()  <= target.properties.absorbance:
+        print("absorbed!")
         photon.absorbed = True
 
     elif random.random() <= target.properties.reflectance:
-        reflect(photon, np.array([0, 0, -1]))
+        point = point - uvect
+        print("Reflect!", point, uvect)
+        reflect(photon, 1*uvect)
 
     else:
+        point = point + uvect
         refract(photon, None, None) # Todo
+
+    move(photon, point, 1)
 
     if target.logging:
         return target
@@ -133,9 +142,10 @@ def move(photon, point, n=1):
 
 def reflect(photon, normal):
     # Todo, make this reasonable
-    dir = np.array([random.random(), random.random(), random.random()])
-    dir = dir / np.linalg.norm(dir)
-    photon.direction = dir
+    normal = normal
+    #dir = np.array([random.random(), random.random(), random.random()])
+    #dir = dir / np.linalg.norm(dir)
+    photon.direction = normal
 
 def refract(photon, old, new):
     # Todo, make this reasonable

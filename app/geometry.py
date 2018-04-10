@@ -91,22 +91,22 @@ class Box(Object):
         x, y, z = self.cornerA.array
         X, Y, Z = self.cornerB.array
         self.points = []
-        self.points.append(np.array([X, y, z]))
-        self.points.append(np.array([X, Y, z]))
-        self.points.append(np.array([x, Y, z]))
-        self.points.append(np.array([x, Y, z]))
-        self.points.append(np.array([x, y, Z]))
-        self.points.append(np.array([x, y, Z]))
-        self.points.append(np.array([X, y, Z]))
-        self.points.append(np.array([X, Y, Z]))
+        self.points.append(np.array([X, y, z])) # 0
+        self.points.append(np.array([X, Y, z])) # 1
+        self.points.append(np.array([x, Y, z])) # 2
+        self.points.append(np.array([x, y, z])) # 3
+        self.points.append(np.array([x, y, Z])) # 4
+        self.points.append(np.array([x, Y, Z])) # 5
+        self.points.append(np.array([X, Y, Z])) # 6
+        self.points.append(np.array([X, y, Z])) # 7
 
         self.planes = []
-        self.planes.append(Plane(self.points[0], self.points[3], self.points[4]))
-        self.planes.append(Plane(self.points[1], self.points[2], self.points[7]))
-        self.planes.append(Plane(self.points[5], self.points[0], self.points[1]))
-        self.planes.append(Plane(self.points[2], self.points[3], self.points[4]))
-        self.planes.append(Plane(self.points[0], self.points[1], self.points[2]))
-        self.planes.append(Plane(self.points[4], self.points[5], self.points[6]))
+        self.planes.append(Plane(self.points[0], self.points[3], self.points[4])) # Bottom
+        self.planes.append(Plane(self.points[1], self.points[2], self.points[5])) # Top
+        self.planes.append(Plane(self.points[0], self.points[1], self.points[2])) # Front
+        self.planes.append(Plane(self.points[2], self.points[3], self.points[4])) # Left
+        self.planes.append(Plane(self.points[0], self.points[4], self.points[6])) # Right
+        self.planes.append(Plane(self.points[4], self.points[5], self.points[6])) # Back
 
     def contains(self, point):
         """Returns True/False if the point is inside the object"""
@@ -160,7 +160,8 @@ class Plane:
             return False
 
         else:
-            d = (self.offset - np.dot(ray.start, self.normal))/np.dot(ray.vector, self.normal)
+            d = (self.offset - np.dot(ray.start, self.normal))/np.dot(ray.vector, self.normal) # incorrect?
+            #d = np.dot((self.offset - ray.start), self.normal) / np.dot(ray.vector, self.normal)
             intercept = d * ray.vector + ray.start
             if in_range(intercept[0], self.xbounds) and in_range(intercept[1], self.ybounds) and in_range(intercept[2], self.zbounds):
                 if np.linalg.norm(ray.vector) > np.linalg.norm(intercept - ray.start) and np.linalg.norm(intercept - ray.start) > 0.1:
@@ -169,7 +170,8 @@ class Plane:
             return False
 
     def intersect(self, ray):
-        d = (self.offset - np.dot(ray.start, self.normal)) / np.dot(ray.vector, self.normal)
+        d = (self.offset - np.dot(ray.start, self.normal)) / np.dot(ray.vector, self.normal)  # incorrect?
+        #d = np.dot((self.offset - ray.start), self.normal) / np.dot(ray.vector, self.normal)
         intercept = d * ray.vector + ray.start
         return intercept
 
@@ -187,9 +189,9 @@ class OpticalProperties:
 AIR = OpticalProperties(1.00029, 10 * 10 ** 6, 0, 0)
 LIGHT_FOG = OpticalProperties(1.00029, 2500, 0, 0)
 FOG_SIMPLE = OpticalProperties(1.00029, 50, 0, 0)
-REFLECTOR = OpticalProperties(1, 1, 0, 1)
-PARTIAL = OpticalProperties(1, 10, 0.33, 0.33)
-RECEIVER = OpticalProperties(1, 1, 1, 0, counter=True)
+REFLECTOR = OpticalProperties(1, 1e10, 0, 1)
+PARTIAL = OpticalProperties(1, 100, 0.33, 0.33)
+RECEIVER = OpticalProperties(1, 1e10, 1, 0, counter=True)
 
 if __name__ == "__main__":
     p = Plane(np.array([-1, -1, 0]), np.array([1, -1, 0]), np.array([1, 1, 0]))
